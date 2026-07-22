@@ -1,0 +1,19 @@
+.btn_login{
+       width: 100%;
+}
+
+
+
+.is-invalid {
+    border: 1px solid #e31d2d !important;
+}
+
+.select2-selection.is-invalid {
+  border-color: #dc3545 !important;      /* rojo Bootstrap */
+  padding-right: calc(1.5em + .75rem);   /* espacio para icono si usas validación */
+}
+
+
+.hidden {
+    display: none;
+}
