@@ -1,75 +1,127 @@
 @extends('layouts.template')
 
 @section('contentLogin')
-    <div class="d-flex flex-column flex-root" id="kt_app_root">
-        <!--begin::Authentication - Sign-in -->
-        <div class="d-flex flex-column flex-lg-row flex-column-fluid">
+    <div class="ugelaa-split">
+
+        <!--begin::Left Panel (Blue Branding)-->
+        <div class="ugelaa-panel-left" style="background-image: url({{ url('storage/images/bg-52.jpeg') }})">
+
             <!--begin::Logo-->
-            <a href="index.html" class="d-block d-lg-none mx-auto py-20">
-                <img alt="Logo" src="assets/media/logos/default.svg" class="theme-light-show h-25px" />
-                <img alt="Logo" src="assets/media/logos/default-dark.svg" class="theme-dark-show h-25px" />
-            </a>
-            <div class="d-flex flex-column flex-column-fluid flex-center w-lg-50 p-10">
-                <!--begin::Wrapper-->
-                <div class="d-flex justify-content-between flex-column-fluid flex-column w-100 mw-450px">
-                    <div class="d-flex flex-stack py-2">
-                        <!--begin::Back link-->
-                        <div class="me-2"></div>
+            <div class="ugelaa-panel-logo">
+                <img src="{{ url('storage/images/LOGO_UGELAA.png') }}" alt="UGEL Alto Amazonas" />
+            </div>
+            <!--end::Logo-->
 
-                    </div>
-                    <!--end::Header-->
-                    <!--begin::Body-->
-                    <div class="py-20">
-                        <!--begin::Body-->
-                        <div class="card-body">
-                            <!--begin::Heading-->
-                            <div class="text-start mb-10">
-                                <!--begin::Title-->
-                                <h1 class="text-gray-900 mb-3 fs-3x" data-kt-translate="sign-in-title">Tramite Documentario</h1>
-                                <!--end::Title-->
-                                <!--begin::Text-->
-                                <div class="text-gray-500 fw-semibold fs-6" data-kt-translate="general-desc">Ingrese su Usuario y Contraseña</div>
-                                <!--end::Link-->
-                            </div>
-                            @if (session('status'))
-                                <div class="alert alert-danger">
-                                    {{ session('status') }}
-                                </div>
-                            @endif
-                            <!--begin::Heading-->
-                            <!--begin::Input group=-->
-                            <form class="form w-100" method="POST" action="{{ route('login') }}">
-                                @csrf
-                                <div class="fv-row mb-8">
-                                    <!--begin::Email-->
-                                    <input type="text" placeholder="Usuario" name="nickname" autocomplete="off"
-                                        class="form-control form-control-solid" value="{{ old('nickname') }}" />
-                                </div>
-                                <!--end::Input group=-->
-                                <div class="fv-row mb-7">
-                                    <input type="password" placeholder="Contraseña" name="password" autocomplete="off"
-                                        class="form-control form-control-solid" value="{{ old('password') }}" />
-                                </div>
+            <!--begin::Branding Text-->
+            <div class="ugelaa-panel-branding">
+                <h2>Sistema de Trámite</h2>
+                <p>UGEL Alto Amazonas — Portal para el registro, seguimiento y gestión de trámites documentarios.</p>
+            </div>
+            <!--end::Branding Text-->
 
-                                <!--end::Wrapper-->
-                                <!--begin::Actions-->
-                                <div class="d-flex flex-stack">
-                                    <!--begin::Submit-->
-                                    <button type="submit" class="btn btn-primary me-2 flex-shrink-0  btn_login">Ingresar</button>
-                                </div>
-                            </form>
-                            <!--end::Actions-->
-                        </div>
-                        <!--begin::Body-->
-
-                        <!--end::Form-->
-                    </div>
-                    <div class="m-0">
-                    </div>
+            <!--begin::Footer-->
+            <div class="ugelaa-panel-footer">
+                <p class="ugelaa-panel-footer-copy">&copy; 2026 UGEL Alto Amazonas</p>
+                <div class="ugelaa-panel-footer-links">
+                    <a href="#">Soporte</a>
+                    <a href="#">Legal</a>
+                    <a href="#">Contacto</a>
                 </div>
             </div>
-            <div class="d-none d-lg-flex flex-lg-row-fluid w-50 bgi-size-cover bgi-position-y-center bgi-position-x-start bgi-no-repeat"
-                 style="background-image: url({{ url('storage/images/bg-3.jpg') }})"></div>
+            <!--end::Footer-->
+
         </div>
+        <!--end::Left Panel-->
+
+        <!--begin::Right Panel (Form Area)-->
+        <div class="ugelaa-panel-right">
+
+            <!--begin::Form Container-->
+            <div class="ugelaa-form-container">
+
+                <!--begin::Header-->
+                <div class="ugelaa-form-header">
+                    <h1>Iniciar Sesión</h1>
+                    <p>Ingresa tus credenciales para acceder al sistema</p>
+                </div>
+                <!--end::Header-->
+
+                <!--begin::Form-->
+                <form class="ugelaa-form" method="POST" action="{{ route('login') }}">
+                    @csrf
+                    <!--begin::Usuario Input-->
+                    <div class="ugelaa-input-group">
+                        <label class="ugelaa-input-label" for="ugelaa_usuario">Usuario</label>
+                        <div class="ugelaa-input-wrap">
+                            <svg class="ugelaa-input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <input type="text" class="ugelaa-input" id="nickname" name="nickname"
+                                placeholder="Ingresa tu usuario" autocomplete="off" required />
+                        </div>
+                    </div>
+                    <!--end::Usuario Input-->
+
+                    <!--begin::Contraseña Input-->
+                    <div class="ugelaa-input-group">
+                        <label class="ugelaa-input-label" for="ugelaa_password">Contraseña</label>
+                        <div class="ugelaa-input-wrap">
+                            <svg class="ugelaa-input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <input type="password" class="ugelaa-input" id="password" name="password"
+                                placeholder="Ingresa tu contraseña" autocomplete="off" required />
+                            <button type="button" class="ugelaa-pw-toggle" id="ugelaa_pw_toggle"
+                                aria-label="Mostrar contraseña">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" id="ugelaa_eye_icon">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <!--end::Contraseña Input-->
+
+                    <!--begin::Submit Button-->
+                    <div class="ugelaa-btn-wrapper">
+                        <button type="submit" id="kt_sign_in_submit" class="ugelaa-btn-submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                <polyline points="10 17 15 12 10 7"></polyline>
+                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                            </svg>
+                            <span class="indicator-label">Ingresar</span>
+                            <span class="indicator-progress" style="display: none;">Verificando...
+                                <span class="ugelaa-spinner" style="display: inline-block;"></span>
+                            </span>
+                        </button>
+                    </div>
+                    <!--end::Submit Button-->
+
+                </form>
+                <!--end::Form-->
+
+            </div>
+            <!--end::Form Container-->
+
+            <!--begin::Right Footer-->
+            <div class="ugelaa-right-footer">
+                <p>Sistema de Trámite Documentario — UGEL Alto Amazonas</p>
+            </div>
+            <!--end::Right Footer-->
+
+        </div>
+        <!--end::Right Panel-->
+
     </div>
 @endsection

@@ -21,6 +21,10 @@ use App\Http\Requests\UsuarioRequest;
 use Illuminate\Support\Arr;
 use App\Traits\MenuTrait;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Area;
+
+use App\Models\Equipo;
+use App\Models\SubEquipo;
 
 class UsuarioController extends Controller
 {
@@ -42,10 +46,14 @@ class UsuarioController extends Controller
         $tipos = TipoUsuario::orderBy('descripcion')
             ->get();
 
+        $area = Area::orderBy('nombre_area')
+            ->get();
+
         $opciones = [
             'placeholder' => 'usuario',
             'titlePage' => 'Usuarios',
             'tipos' => $tipos,
+            'area' => $area,
         ];
 
         return view('seguridad.usuarios.index',  $opciones);
@@ -57,10 +65,12 @@ class UsuarioController extends Controller
         $tipos = TipoUsuario::orderBy('descripcion')
             ->get();
 
+
+
         $opciones = [
             'titlePage' => 'Agregar Usuarios',
             'tipos' => $tipos,
-            // 'oficina' => $oficina,
+
             'otherLink' => [
                 'name' => 'Usuarios',
                 'link' => 'usuarios'
@@ -72,31 +82,60 @@ class UsuarioController extends Controller
 
     public function apiUsuarios(Request $request)
     {
-
-
         $draw   = (int) $request->input('draw', 1);
-        $start  = (int) $request->input('start', 0);
+        $start  = max((int) $request->input('start', 0), 0);
         $length = (int) $request->input('length', 10);
         $order  = $request->input('order', []);
         $search = trim((string) $request->input('search.value', ''));
 
-        // Columnas esperadas (índices desde el front)
-        $columns = ['usuario.id', 'usuario.dni', 'nombre_completo', 'tipo_usuario.descripcion as descripcion', 'estado'];
+        $length = $length === -1
+            ? 1000
+            : max(1, min($length, 100));
 
-        //$query = Usuario::query()->select($columns);
-
+        /*
+     * Columnas actuales de DataTables:
+     *
+     * 0 = correlativo
+     * 1 = documento
+     * 2 = nombre completo
+     * 3 = tipo usuario
+     * 4 = estado
+     */
+        $columnasOrdenables = [
+            1 => 'usuario.dni',
+            2 => 'usuario.nombre_completo',
+            3 => 'tipo_usuario.descripcion',
+            4 => 'usuario.estado',
+        ];
 
         $query = Usuario::query()
-            ->select($columns)
-            ->leftJoin('tipo_usuario', 'tipo_usuario.id', '=', 'usuario.tipoUsuario_id');
+            ->select([
+                'usuario.id',
+                'usuario.dni',
+                'usuario.nombre_completo',
+                'tipo_usuario.descripcion as descripcion',
+                'usuario.estado',
+            ])
+            ->leftJoin(
+                'tipo_usuario',
+                'tipo_usuario.id',
+                '=',
+                'usuario.tipoUsuario_id'
+            );
 
+        // Total de registros sin filtros
+        $recordsTotal = Usuario::count();
 
-
-        // Filtro global
+        // Búsqueda
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
-                $q->where('nombre_completo', 'LIKE', "%{$search}%")
-                    ->orWhere('dni', 'LIKE', "%{$search}%");
+                $q->where('usuario.nombre_completo', 'LIKE', "%{$search}%")
+                    ->orWhere('usuario.dni', 'LIKE', "%{$search}%")
+                    ->orWhere(
+                        'tipo_usuario.descripcion',
+                        'LIKE',
+                        "%{$search}%"
+                    );
 
                 if (ctype_digit($search)) {
                     $q->orWhere('usuario.id', (int) $search);
@@ -104,59 +143,80 @@ class UsuarioController extends Controller
             });
         }
 
-        $recordsTotal    = Usuario::count();
-        $recordsFiltered = (clone $query)->count();
+        // Total con filtros
+        $recordsFiltered = (clone $query)
+            ->count('usuario.id');
 
-        // Orden
+        // Ordenamiento
+        $ordenAplicado = false;
+
         if (!empty($order)) {
             foreach ($order as $ord) {
-                $colIdx = (int) data_get($ord, 'column', 0);
-                $dir    = data_get($ord, 'dir', 'asc') === 'desc' ? 'desc' : 'asc';
-                $col    = $columns[$colIdx] ?? 'id';
-                $query->orderBy($col, $dir);
+                $colIdx = (int) data_get($ord, 'column', 1);
+
+                $dir = data_get($ord, 'dir', 'asc') === 'desc'
+                    ? 'desc'
+                    : 'asc';
+
+                if (isset($columnasOrdenables[$colIdx])) {
+                    $query->orderBy(
+                        $columnasOrdenables[$colIdx],
+                        $dir
+                    );
+
+                    $ordenAplicado = true;
+                }
             }
-        } else {
-            $query->orderBy('id', 'desc');
         }
 
-        
-        
+        if (!$ordenAplicado) {
+            $query->orderByDesc('usuario.id');
+        }
 
         // Paginación
-        $data = $query->skip($start)->take($length)->get();
+        $usuarios = $query
+            ->skip($start)
+            ->take($length)
+            ->get();
 
-        $data = $data->map(function ($row) {
+        $data = $usuarios->map(function ($row) {
+            $botones = '';
 
-           $botones = '';
+            $botones .= '
+            
+                <a href="#"
+                   class="btn btn-sm btn-icon btn-light-success btn-active-success
+                          w-25px h-25px btn_editarUsuarios"
+                   data-usuario-id="' . $row->id . '"
+                   data-bs-toggle="modal"
+                   data-bs-target="#modal_usuariosEditar"
+                   title="Editar">
+                    <i class="ki-outline ki-pencil fs-5"></i>
+                </a>
+        ';
 
-         $botones .= '
-<div class="symbol symbol-20px">
-      <a href="#"
-       data-fancybox
-       class="btn btn-sm btn-icon btn-primary btn-active-primary w-20px h-20px"
-       data-bs-toggle="tooltip" title="Ver documento">
-        <i class="ki-outline ki-devices-2"></i>
-    </a>
-</div>';
 
- $botones .= '
-        <div class="symbol symbol-20px">
-            <a href="#"
-               data-fancybox data-type="pdf" 
-               class="btn btn-sm btn-icon btn-success btn-active-success w-20px h-20px" 
-               data-bs-toggle="tooltip" title="Ver anexo">
-                <i class="ki-outline ki-sms"></i>
-            </a>
-        </div>';
+            $botones .= '
+                <a href="#"
+                   class="btn btn-sm btn-icon btn-light-primary btn-active-primary
+                          w-25px h-25px btn-usuario-detalle"
+                   data-usuario-id="' . $row->id . '"
+                   data-bs-toggle="modal"
+                   data-bs-target="#modalUsuarioDetalle"
+                   title="Detalle">
+                    <i class="ki-outline ki-eye fs-5"></i>
+                </a>
+        ';
+
+
 
             return [
-                'checkbox'        => ' <div class="form-check form-check-sm form-check-custom form-check-solid">
-										<input name="idusuario" class="form-check-input idusuario" data-id=' . $row->id . ' data-url=' . route('permisos.accesos', $row->id) . '   type="checkbox" value="' . $row->id . '" /></div>',
                 'id'              => $row->id,
                 'documento'       => $row->dni,
                 'nombre_completo' => $row->nombre_completo,
-                'descripcion' => $row->descripcion,
-                'estado' => $row->estado,
+                'descripcion'     => $row->descripcion ?? 'SIN TIPO',
+                'estado'          => $row->estado,
+                'acciones'        => $botones,
             ];
         });
 
@@ -201,6 +261,7 @@ class UsuarioController extends Controller
             ]);
         }
 
+
         $tipoUsuario = TipoUsuario::where('id', $request->tipoUsuario_id)
             ->first();
 
@@ -213,8 +274,11 @@ class UsuarioController extends Controller
             'password'  => $request->password,
             'tipoUsuario_id' => $tipoUsuario->id,
             'estado' => 1,
-            'documento'  => $request->documento,
+            'dni'  => $request->documento,
             'nombre_completo'  => $request->apellidos . ' ' . $request->nombres,
+            'area_id'        => $request->area_id,
+            'equipo_id'      => $request->filled('equipo_id') ? $request->equipo_id : null,
+            'sub_equipo_id'   => $request->filled('subequipo_id') ? $request->subequipo_id : null,
         ]);
 
         $this->cambiarPermisos($usuario, $tipoUsuario->id);
@@ -279,10 +343,22 @@ class UsuarioController extends Controller
         $usuario = Usuario::where('id', $id)
             ->first();
 
+        $area = Area::orderBy('nombre_area')
+            ->get();
+
+        $equipo = Equipo::orderBy('nombre_equipo')
+            ->get();
+
+        $SubEquipo = SubEquipo::orderBy('nombre_subequipo')
+            ->get();
+
         return response()->json([
             'action' => route('usuarios.estado', $id),
             'tipos' => $tipos,
             'usuario' => $usuario,
+            'area' => $area,
+            'equipo' => $equipo,
+            'SubEquipo' => $SubEquipo,
         ]);
     }
 
@@ -298,7 +374,7 @@ class UsuarioController extends Controller
             'apellidos' => ['required', 'regex:/^[a-zA-ZÑñ&\s]+$/'],
             'nickname' => ['required'],
             'tipoUsuario_id' => ['required'],
-            'documento' => ['required', 'digits:8', 'numeric', Rule::unique('usuario', 'documento')->ignore($id)],
+            'documento' => ['required', 'digits:8', 'numeric', Rule::unique('usuario', 'dni')->ignore($id)],
         ];
 
         $messages = [
@@ -333,8 +409,11 @@ class UsuarioController extends Controller
                     'apellidos' => $request->apellidos,
                     'nickname'  => $request->nickname,
                     'tipoUsuario_id' => $request->tipoUsuario_id,
-                    'documento'  => $request->documento,
+                    'dni'  => $request->documento,
                     'nombre_completo'  => $request->apellidos . ', ' . $request->nombres,
+                    'area_id'        => $request->area_id,
+                    'equipo_id'      => $request->filled('equipo_id') ? $request->equipo_id : null,
+                    'sub_equipo_id'   => $request->filled('subequipo_id') ? $request->subequipo_id : null,
                 ]);
         } else {
             Usuario::find($id)
@@ -344,8 +423,11 @@ class UsuarioController extends Controller
                     'nickname'  => $request->nickname,
                     'password'  => $request->password,
                     'tipoUsuario_id' => $request->tipoUsuario_id,
-                    'documento'  => $request->documento,
+                    'dni'  => $request->documento,
                     'nombre_completo'  => $request->apellidos . ', ' . $request->nombres,
+                    'area_id'        => $request->area_id,
+                    'equipo_id'      => $request->filled('equipo_id') ? $request->equipo_id : null,
+                    'sub_equipo_id'   => $request->filled('subequipo_id') ? $request->subequipo_id : null,
                 ]);
         }
 

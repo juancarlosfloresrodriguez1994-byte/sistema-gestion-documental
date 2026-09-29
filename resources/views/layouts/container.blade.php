@@ -11,15 +11,16 @@
             <!--end::Title-->
             <!--begin::Breadcrumb-->
             <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                <!--begin::Item-->
+                <!--begin::Item
+                
                 <li class="breadcrumb-item text-muted">
                     <a href="{{ route('inicio') }}" class="text-muted text-hover-primary">Inicio</a>
-                </li>
+                </li>-->
                 <!--end::Item-->
-                <!--begin::Item-->
+                <!--begin::Item
                 <li class="breadcrumb-item">
                     <span class="bullet bg-gray-500 w-5px h-2px"></span>
-                </li>
+                </li>-->
                 <!--end::Item-->
                 <!--begin::Item-->
                 <li class="breadcrumb-item text-muted">

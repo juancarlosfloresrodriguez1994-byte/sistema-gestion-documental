@@ -25,8 +25,11 @@ class Usuario extends Authenticatable
         'correo',
         'tipoUsuario_id',
         'estado',
-        'documento',
+        'dni',
         'nombre_completo',
+        'area_id',
+        'equipo_id',
+        'sub_equipo_id',
     ];
 
     public function tipoUsuario()

@@ -49,7 +49,7 @@
                         </div>
                         <div class="row mb-5">
                             <div class="col-md-4 fv-row">
-                                <label class=" fs-5 fw-semibold form-label">Nickname</label>
+                                <label class=" fs-5 fw-semibold form-label">Usuario</label>
                                 <input type="text" class="form-control form-control-solid validate_modal"
                                     id="nickname" name="nickname" />
                                 <div class="invalid-feedback"></div>
@@ -73,11 +73,46 @@
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
-
+                        <div class="row row-cols-lg-3 g-10 destino_input">
+                        <div class="col">
+                            <div class="fv-row mb-9">
+                                <label class="fs-6 fw-semibold mb-2">Area</label>
+                                <select id="area_id" class="form-select arefiltro validate_modal" name="area_id"
+                                    data-kt-ecommerce-settings-type="select2_flags"
+                                    data-placeholder="Select a country">
+                                    <option value="">Seleccionar</option>
+                                    @foreach ($area as $area)
+                                        <option value="{{ $area->id }}">{{ $area->nombre_area }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="col" data-kt-calendar="datepicker">
+                            <div class="fv-row mb-9">
+                                <label class="fs-6 fw-semibold mb-2">Equipo</label>
+                                <select id="equipo_id" class="form-select filtroEquipo" name="equipo_id"
+                                    data-kt-ecommerce-settings-type="select2_flags"
+                                    data-placeholder="Select a country">
+                                    <option value="=">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col" data-kt-calendar="datepicker">
+                            <div class="fv-row mb-9">
+                                <label class="fs-6 fw-semibold mb-2">Sub equipos</label>
+                                <select id="subequipo_id" class="form-select filtrosubEquipo" name="subequipo_id"
+                                    data-kt-ecommerce-settings-type="select2_flags"
+                                    data-placeholder="Select a country">
+                                    <option value="=">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
                     </div>
                     <div class="modal-footer flex-center">
-                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="reset" class="btn btn-danger me-3" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" id="btn-guardar" class="btn btn-primary">
                             <span class="indicator-label">Guardar</span>
                         </button>

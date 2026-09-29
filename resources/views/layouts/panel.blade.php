@@ -4,7 +4,7 @@
         <!--begin::Header-->
         <div id="kt_app_header" class="app-header" data-kt-sticky="true" data-kt-sticky-activate="{default: true, lg: true}"
             data-kt-sticky-name="app-header-minimize" data-kt-sticky-offset="{default: '200px', lg: '0'}"
-            data-kt-sticky-animation="false">
+            data-kt-sticky-animation="false" style="background-color: #0073B7">
             <!--begin::Header container-->
             <div class="app-container container-fluid d-flex align-items-stretch justify-content-between"
                 id="kt_app_header_container">
@@ -42,9 +42,9 @@
                     <!--begin::Logo image-->
                     <a href="{{ route('inicio') }}">
                         <img alt="Logo" src="{{ url('storage/images/LOGO_UGELAA.png') }}"
-                            class="h-100px app-sidebar-logo-default" />
+                            class="h-50px app-sidebar-logo-default" />
                         <img alt="Logo" src="{{ url('storage/images/LOGO_UGELAA.png') }}"
-                            class="h-50px app-sidebar-logo-minimize" />
+                            class="h-30px app-sidebar-logo-minimize" />
                     </a>
 
                     <div id="kt_app_sidebar_toggle"

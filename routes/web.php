@@ -8,6 +8,12 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\TipoUsuarioController;
 
 use App\Http\Controllers\TramiteExternoController;
+
+use App\Http\Controllers\SolicitanteController;
+
+use App\Http\Controllers\ConsultarApisController;
+
+use App\Http\Controllers\DominioController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,3 +54,13 @@ Route::post('tipo-usuario/filtro', [TipoUsuarioController::class, 'filtro'])->na
 Route::put('estado-usuarios/{id}', [UsuarioController::class, 'estado'])->name('usuarios.estado');
 
 Route::resource('tramite-externo', TramiteExternoController::class);
+Route::post('filterEquipo', [TramiteExternoController::class, 'filterEquipo']);
+Route::post('filtersubEquipo', [TramiteExternoController::class, 'filtersubEquipo']);
+Route::get('apiTramiteExterno', [TramiteExternoController::class, 'apiTramiteExterno'])->name('apiTramiteExterno.index');
+
+Route::get('filtrosolicitante', [SolicitanteController::class, 'autocompletadoSolicitante']);
+
+Route::post('BuscarDocumentoUsuario', [ConsultarApisController::class, 'BuscarDocumentoUsuario'])->name('BuscarDocumentoUsuario.index');
+
+Route::get('filtrodominio', [DominioController::class, 'autocompletadoDominio']);
+
