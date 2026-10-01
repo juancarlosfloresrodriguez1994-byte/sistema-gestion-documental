@@ -224,7 +224,7 @@
                     </div>
                 </form>
 
-                {{-- Modal de verificación enviada --}}
+                {{-- Confirmación de verificación enviada --}}
                 <div class="ugelaa-verificacion-modal" id="modalVerificacion" style="display: none;">
                     <div class="ugelaa-verificacion-card">
                         <div class="ugelaa-verificacion-icon">
@@ -235,11 +235,19 @@
                                 <polyline points="22,6 12,13 2,6" />
                             </svg>
                         </div>
+
                         <h2 class="ugelaa-verificacion-title">Verificación Enviada</h2>
+
                         <p class="ugelaa-verificacion-text">
-                            Se envió un enlace de verificación a:
+                            Hemos enviado un enlace de verificación al correo:
                         </p>
+
                         <p class="ugelaa-verificacion-correo" id="correoEnviado"></p>
+
+                        <p class="ugelaa-verificacion-text" style="margin-top: 10px;">
+                            Revise su bandeja de entrada y siga el enlace recibido para completar su registro.
+                        </p>
+
                         <p class="ugelaa-verificacion-timer">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -253,27 +261,10 @@
                         <div class="ugelaa-verificacion-divider"></div>
 
                         <p class="ugelaa-verificacion-hint">
-                            ¿No recibió el correo? Puede cambiar la dirección y reenviar.
+                            ¿No recibió el correo? Puede reenviar el enlace de verificación usando los datos ya registrados.
                         </p>
 
-                        {{-- Formulario reenvío --}}
                         <div class="ugelaa-reenvio-form" id="reenvioForm">
-                            <div class="ugelaa-input-group">
-                                <label class="ugelaa-input-label" for="reenvio_correo">Correo Electrónico</label>
-                                <input type="email" class="ugelaa-input" id="reenvio_correo"
-                                    placeholder="Nuevo correo electrónico" />
-                            </div>
-                            <div class="ugelaa-input-group">
-                                <label class="ugelaa-input-label" for="reenvio_password">Contraseña</label>
-                                <input type="password" class="ugelaa-input" id="reenvio_password"
-                                    placeholder="Confirme su contraseña" />
-                            </div>
-                            <div class="ugelaa-input-group">
-                                <label class="ugelaa-input-label" for="reenvio_password_confirmation">Confirmar Contraseña</label>
-                                <input type="password" class="ugelaa-input" id="reenvio_password_confirmation"
-                                    placeholder="Repita su contraseña" />
-                            </div>
-
                             <div id="alertaReenvio" class="ugelaa-alert ugelaa-alert--danger" style="display: none;"></div>
 
                             <button type="button" class="ugelaa-btn-submit ugelaa-btn-submit--secondary" id="btnReenviar">
@@ -423,8 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Mostrar modal de verificación
                     document.getElementById('correoEnviado').textContent = data.correo;
-                    document.getElementById('reenvio_correo').value = data.correo;
-                    formRegistro.style.display = 'none';
+                                        formRegistro.style.display = 'none';
                     modalVerificacion.style.display = 'block';
 
                     // Iniciar countdown
@@ -465,32 +455,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ─── Reenviar verificación ───
     document.getElementById('btnReenviar').addEventListener('click', function() {
-        const correo = document.getElementById('reenvio_correo').value;
-        const password = document.getElementById('reenvio_password').value;
-        const passwordConfirm = document.getElementById('reenvio_password_confirmation').value;
+        const correo = document.getElementById('reg_correo').value;
+        const password = document.getElementById('reg_password').value;
+        const passwordConfirm = document.getElementById('reg_password_confirmation').value;
         const alertaReenvio = document.getElementById('alertaReenvio');
+        const btnReenviar = this;
 
         alertaReenvio.style.display = 'none';
+        alertaReenvio.classList.remove('ugelaa-alert--success');
+        alertaReenvio.classList.add('ugelaa-alert--danger');
 
-        if (!correo) {
-            alertaReenvio.textContent = 'Ingrese un correo electrónico.';
-            alertaReenvio.style.display = 'block';
-            return;
-        }
-
-        if (!password || password.length < 6) {
-            alertaReenvio.textContent = 'La contraseña debe tener al menos 6 caracteres.';
-            alertaReenvio.style.display = 'block';
-            return;
-        }
-
-        if (password !== passwordConfirm) {
-            alertaReenvio.textContent = 'Las contraseñas no coinciden.';
-            alertaReenvio.style.display = 'block';
-            return;
-        }
-
-        this.disabled = true;
+        btnReenviar.disabled = true;
 
         axios.post('/registro/reenviar', {
             registro_id: registroId,
@@ -500,26 +475,25 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(function(response) {
             if (response.data.success) {
-                document.getElementById('correoEnviado').textContent = response.data.correo;
+                document.getElementById('correoEnviado').textContent = response.data.correo || correo;
 
                 alertaReenvio.classList.remove('ugelaa-alert--danger');
                 alertaReenvio.classList.add('ugelaa-alert--success');
-                alertaReenvio.textContent = response.data.message;
+                alertaReenvio.textContent = response.data.message || 'El enlace de verificación fue reenviado correctamente.';
                 alertaReenvio.style.display = 'block';
 
-                // Reiniciar countdown
                 startCountdown(10 * 60);
             }
         })
         .catch(function(error) {
-            const msg = error.response?.data?.message || 'Error al reenviar. Intente nuevamente.';
+            const msg = error.response?.data?.message || 'No se pudo reenviar el enlace. Intente nuevamente.';
             alertaReenvio.classList.remove('ugelaa-alert--success');
             alertaReenvio.classList.add('ugelaa-alert--danger');
             alertaReenvio.textContent = msg;
             alertaReenvio.style.display = 'block';
         })
         .finally(function() {
-            document.getElementById('btnReenviar').disabled = false;
+            btnReenviar.disabled = false;
         });
     });
 
