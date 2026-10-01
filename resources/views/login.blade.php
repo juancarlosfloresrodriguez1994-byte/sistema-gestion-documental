@@ -46,6 +46,14 @@
                 </div>
                 <!--end::Header-->
 
+                <!--begin::Alert status-->
+                @if(session('status'))
+                    <div class="ugelaa-alert ugelaa-alert--danger" style="margin-bottom: 18px;">
+                        {{ session('status') }}
+                    </div>
+                @endif
+                <!--end::Alert status-->
+
                 <!--begin::Form-->
                 <form class="ugelaa-form" method="POST" action="{{ route('login') }}">
                     @csrf
@@ -90,6 +98,12 @@
                     </div>
                     <!--end::Contraseña Input-->
 
+                    <!--begin::Forgot Password Link-->
+                    <div class="ugelaa-forgot-link-wrapper">
+                        <a href="{{ url('recuperar-password') }}" class="ugelaa-forgot-link">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <!--end::Forgot Password Link-->
+
                     <!--begin::Submit Button-->
                     <div class="ugelaa-btn-wrapper">
                         <button type="submit" id="kt_sign_in_submit" class="ugelaa-btn-submit">
@@ -111,6 +125,15 @@
                 </form>
                 <!--end::Form-->
 
+                <!--begin::Register Link-->
+                <div class="ugelaa-auth-links ugelaa-auth-links--center">
+                    <span class="ugelaa-auth-text">¿No tienes cuenta?</span>
+                    <a href="{{ url('registro') }}" class="ugelaa-auth-link ugelaa-auth-link--primary">
+                        Registrarse
+                    </a>
+                </div>
+                <!--end::Register Link-->
+
             </div>
             <!--end::Form Container-->
 
@@ -125,3 +148,4 @@
 
     </div>
 @endsection
+

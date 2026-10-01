@@ -2405,3 +2405,452 @@ body.te-body {
         font-size: 0.8rem;
     }
 }
+
+
+/* ============================================
+   AUTH PAGES — Registro, Recuperar Contraseña
+   ============================================ */
+
+/* ── Alerts ── */
+.ugelaa-alert {
+    padding: 12px 16px;
+    border-radius: var(--ugelaa-radius-sm, 10px);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+.ugelaa-alert--danger {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.ugelaa-alert--success {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+/* ── Auth Links (Login page) ── */
+.ugelaa-forgot-link-wrapper {
+    text-align: right;
+    margin-top: -8px;
+    margin-bottom: 8px;
+}
+
+.ugelaa-forgot-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ugelaa-primary, #007ee8);
+    text-decoration: none;
+    transition: color 0.25s ease;
+}
+
+.ugelaa-forgot-link:hover {
+    color: var(--ugelaa-primary-dark, #0060b8);
+    text-decoration: underline;
+}
+
+.ugelaa-auth-links {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeInUp 0.4s 0.6s ease forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.ugelaa-auth-links--center {
+    justify-content: center;
+}
+
+.ugelaa-auth-text {
+    font-size: 13px;
+    color: var(--ugelaa-text-secondary, #6b7280);
+}
+
+.ugelaa-auth-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ugelaa-text-secondary, #6b7280);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.25s ease;
+}
+
+.ugelaa-auth-link:hover {
+    color: var(--ugelaa-primary, #007ee8);
+}
+
+.ugelaa-auth-link--primary {
+    color: var(--ugelaa-primary, #007ee8);
+    font-weight: 600;
+}
+
+.ugelaa-auth-link--primary:hover {
+    color: var(--ugelaa-primary-dark, #0060b8);
+    text-decoration: underline;
+}
+
+/* ── Registro Form Container (wider) ── */
+.ugelaa-panel-right--registro {
+    overflow-y: auto;
+}
+
+.ugelaa-form-container--registro {
+    max-width: 520px;
+}
+
+/* ── Step Badges ── */
+.ugelaa-step-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.ugelaa-step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ugelaa-primary, #007ee8), var(--ugelaa-primary-dark, #0060b8));
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ugelaa-step-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ugelaa-text-dark, #1a1a2e);
+    letter-spacing: -0.2px;
+}
+
+/* ── Registro Steps ── */
+.ugelaa-registro-step {
+    margin-bottom: 8px;
+}
+
+.ugelaa-registro-step--hidden {
+    display: none;
+}
+
+/* ── Input Row (2 columns) ── */
+.ugelaa-input-row {
+    display: flex;
+    gap: 14px;
+}
+
+.ugelaa-input-group--half {
+    flex: 1;
+}
+
+/* ── Readonly Input ── */
+.ugelaa-input--readonly {
+    background-color: #e8f0fe !important;
+    border-color: #c7d8f0 !important;
+    color: #1a365d !important;
+    font-weight: 500;
+    cursor: default;
+}
+
+/* ── Search Button in Input ── */
+.ugelaa-input-wrap--with-btn {
+    display: flex;
+    gap: 0;
+}
+
+.ugelaa-input-wrap--with-btn .ugelaa-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    flex: 1;
+}
+
+.ugelaa-btn-buscar {
+    padding: 0 18px;
+    background: var(--ugelaa-primary, #007ee8);
+    border: none;
+    border-radius: 0 var(--ugelaa-radius-sm, 10px) var(--ugelaa-radius-sm, 10px) 0;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.25s ease;
+    white-space: nowrap;
+}
+
+.ugelaa-btn-buscar:hover {
+    background: var(--ugelaa-primary-dark, #0060b8);
+}
+
+.ugelaa-btn-buscar:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.ugelaa-spinner-sm {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+/* ── RENIEC verified data badge ── */
+.ugelaa-datos-reniec {
+    background: #f0f7ff;
+    border: 1px solid #c7d8f0;
+    border-radius: var(--ugelaa-radius-sm, 10px);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.ugelaa-datos-reniec__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #166534;
+    background: #dcfce7;
+    padding: 4px 10px;
+    border-radius: 50px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+/* ── Input Error ── */
+.ugelaa-input-error {
+    font-size: 12px;
+    color: #dc2626;
+    margin-top: 4px;
+    min-height: 0;
+}
+
+/* ── Password Match Indicator ── */
+.ugelaa-password-match {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    margin-top: 6px;
+    transition: all 0.25s ease;
+}
+
+.ugelaa-password-match--success {
+    color: #166534;
+}
+
+.ugelaa-password-match--success svg {
+    stroke: #16a34a;
+}
+
+.ugelaa-password-match--error {
+    color: #dc2626;
+}
+
+.ugelaa-password-match--error svg {
+    stroke: #dc2626;
+}
+
+/* ── Verificación Modal ── */
+.ugelaa-verificacion-modal {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.ugelaa-verificacion-card {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.ugelaa-verificacion-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0, 126, 232, 0.08), rgba(0, 126, 232, 0.15));
+    color: var(--ugelaa-primary, #007ee8);
+    margin-bottom: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.ugelaa-verificacion-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ugelaa-text-dark, #1a1a2e);
+    margin: 0 0 10px 0;
+}
+
+.ugelaa-verificacion-text {
+    font-size: 14px;
+    color: var(--ugelaa-text-secondary, #6b7280);
+    margin: 0 0 6px 0;
+}
+
+.ugelaa-verificacion-correo {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ugelaa-primary, #007ee8);
+    margin: 0 0 16px 0;
+    word-break: break-all;
+}
+
+.ugelaa-verificacion-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--ugelaa-text-secondary, #6b7280);
+    background: #f8fafc;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+
+.ugelaa-verificacion-timer strong {
+    color: var(--ugelaa-text-dark, #1a1a2e);
+    font-variant-numeric: tabular-nums;
+}
+
+.ugelaa-verificacion-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 20px 0;
+}
+
+.ugelaa-verificacion-hint {
+    font-size: 13px;
+    color: var(--ugelaa-text-muted, #9ca3af);
+    margin: 0 0 16px 0;
+}
+
+/* ── Reenvío Form ── */
+.ugelaa-reenvio-form {
+    text-align: left;
+}
+
+/* ── Submit Button - Secondary ── */
+.ugelaa-btn-submit--secondary {
+    background: #ffffff;
+    color: var(--ugelaa-primary, #007ee8);
+    border: 2px solid var(--ugelaa-primary, #007ee8);
+    box-shadow: none;
+}
+
+.ugelaa-btn-submit--secondary:hover {
+    background: rgba(0, 126, 232, 0.06);
+    color: var(--ugelaa-primary-dark, #0060b8);
+    border-color: var(--ugelaa-primary-dark, #0060b8);
+    box-shadow: 0 4px 14px rgba(0, 126, 232, 0.15);
+}
+
+/* ── Submit Button - Outline ── */
+.ugelaa-btn-submit--outline {
+    background: transparent;
+    color: var(--ugelaa-text-secondary, #6b7280);
+    border: 1.5px solid #d1d5db;
+    box-shadow: none;
+}
+
+.ugelaa-btn-submit--outline:hover {
+    background: #f9fafb;
+    color: var(--ugelaa-text-dark, #1a1a2e);
+    border-color: #9ca3af;
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+/* ── Result Icons (Success/Error) ── */
+.ugelaa-result-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin: 0 auto 24px auto;
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.ugelaa-result-icon--success {
+    background: linear-gradient(135deg, rgba(22, 163, 74, 0.08), rgba(22, 163, 74, 0.15));
+    color: #16a34a;
+}
+
+.ugelaa-result-icon--error {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.08), rgba(220, 38, 38, 0.15));
+    color: #dc2626;
+}
+
+/* ── Result Details ── */
+.ugelaa-result-details {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--ugelaa-radius-sm, 10px);
+    padding: 18px 20px;
+    margin-bottom: 28px;
+}
+
+.ugelaa-result-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #166534;
+    padding: 6px 0;
+}
+
+.ugelaa-result-detail-item svg {
+    flex-shrink: 0;
+    stroke: #16a34a;
+}
+
+/* ── Responsive Auth ── */
+@media (max-width: 768px) {
+    .ugelaa-form-container--registro {
+        max-width: 100%;
+    }
+
+    .ugelaa-input-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .ugelaa-verificacion-card {
+        padding: 0;
+    }
+
+    .ugelaa-verificacion-icon {
+        width: 64px;
+        height: 64px;
+    }
+
+    .ugelaa-verificacion-icon svg {
+        width: 36px;
+        height: 36px;
+    }
+}

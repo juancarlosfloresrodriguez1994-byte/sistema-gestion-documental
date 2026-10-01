@@ -23,6 +23,7 @@ class Usuario extends Authenticatable
         'nickname',
         'password',
         'correo',
+        'correo_verificado_at',
         'tipoUsuario_id',
         'estado',
         'dni',

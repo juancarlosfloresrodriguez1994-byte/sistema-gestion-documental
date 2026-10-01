@@ -7,6 +7,7 @@
     <!--  <base href="/" />-->
     <title>Sistema de tramite</title>
     <meta charset="utf-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="description" />
     <meta name="keywords" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -88,6 +89,13 @@
     <script src="{{ url('assets/js/scripts.bundle.js') }}"></script>
     <script src="{{ url('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 
+    {{-- Configurar axios con CSRF token --}}
+    <script>
+        if (typeof axios !== 'undefined') {
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]')?.content;
+            axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        }
+    </script>
 
     @yield('scripts')
 

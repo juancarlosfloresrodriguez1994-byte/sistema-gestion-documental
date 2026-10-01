@@ -14,6 +14,9 @@ use App\Http\Controllers\SolicitanteController;
 use App\Http\Controllers\ConsultarApisController;
 
 use App\Http\Controllers\DominioController;
+
+use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\RecuperarPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,6 +36,18 @@ Route::get('login', [LoginController::class, 'index']);
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
+// ─── Registro público ───
+Route::get('registro', [RegistroController::class, 'index'])->name('registro');
+Route::post('registro/buscar-dni', [RegistroController::class, 'buscarDni'])->name('registro.buscar-dni');
+Route::post('registro', [RegistroController::class, 'registrar'])->name('registro.enviar');
+Route::post('registro/reenviar', [RegistroController::class, 'reenviar'])->name('registro.reenviar');
+Route::get('registro/verificar/{token}', [RegistroController::class, 'verificar'])->name('registro.verificar');
+
+// ─── Recuperar contraseña ───
+Route::get('recuperar-password', [RecuperarPasswordController::class, 'index'])->name('password.solicitar');
+Route::post('recuperar-password', [RecuperarPasswordController::class, 'enviarEnlace'])->name('password.enviar');
+Route::get('reset-password/{token}', [RecuperarPasswordController::class, 'formularioReset'])->name('password.reset');
+Route::post('reset-password', [RecuperarPasswordController::class, 'resetear'])->name('password.resetear');
 
 
 Route::get('/', [InicioController::class, 'index'])->name('inicio');
