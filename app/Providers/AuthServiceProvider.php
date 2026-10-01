@@ -1,4 +1,6 @@
 <?php
+// use App\Models\User;
+// Crear el layaut menu
 
 namespace App\Providers;
 
