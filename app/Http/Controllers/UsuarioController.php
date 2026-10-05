@@ -32,8 +32,9 @@ class UsuarioController extends Controller
 
     public function __construct(Request $request)
     {
-        /*
+       
         $this->middleware('can:usuarios.index')->only('index');
+         /*
         $this->middleware('can:usuarios.create')->only('usuarios');
         $this->middleware('can:usuarios.edit')->only('edit');
         $this->middleware('can:usuarios.destroy')->only('destroy');
@@ -197,12 +198,10 @@ class UsuarioController extends Controller
 
 
             $botones .= '
-                <a href="#"
+                <a href="' . route('permisos.accesos', $row->id) . '"
                    class="btn btn-sm btn-icon btn-light-primary btn-active-primary
-                          w-25px h-25px btn-usuario-detalle"
-                   data-usuario-id="' . $row->id . '"
-                   data-bs-toggle="modal"
-                   data-bs-target="#modalUsuarioDetalle"
+                          w-25px h-25px"
+                  
                    title="Detalle">
                     <i class="ki-outline ki-eye fs-5"></i>
                 </a>

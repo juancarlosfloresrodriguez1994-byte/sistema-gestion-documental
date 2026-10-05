@@ -5,96 +5,301 @@
 @section('content')
 
     <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+
         <div class="d-flex flex-column flex-column-fluid">
+
             <div id="kt_app_content" class="app-content flex-column-fluid">
+
                 <div id="kt_app_content_container" class="app-container container-fluid">
-                    <div class="card">
-                        <form method="POST" action="{{ route('usuarios.asignar-permisos', $elemento) }}">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-body pt-0 pb-15 px-5 px-xl-20">
-                                <div class="mb-13 text-center">
+
+                    <form method="POST" action="{{ route('usuarios.asignar-permisos', $elemento) }}">
+
+                        @csrf
+                        @method('PUT')
+
+                        <!--begin::Card-->
+                        <div class="card">
+
+                            <!--begin::Card header-->
+                            <div class="card-header border-0 pt-6">
+
+                                <div class="card-title">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="symbol symbol-50px me-5">
+                                            <div class="symbol-label bg-light-primary">
+                                                <i class="ki-outline ki-shield-tick fs-2x text-primary"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-column">
+
+                                            <h2 class="mb-1">
+                                                Asignar accesos y permisos
+                                            </h2>
+
+                                            <span class="text-muted fw-semibold fs-6">
+                                                Usuario:
+                                                <span class="text-gray-800 fw-bold">
+                                                    {{ $usuario->nombres }}
+                                                    {{ $usuario->apellidos }}
+                                                </span>
+                                            </span>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
-                                <div class="scroll-y me-n7 pe-7" id="kt_modal_new_address_scroll" data-kt-scroll="true"
-                                    data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
-                                    data-kt-scroll-dependencies="#kt_modal_new_address_header"
-                                    data-kt-scroll-wrappers="#kt_modal_new_address_scroll" data-kt-scroll-offset="300px">
 
-                                    <div class="row mb-5">
-                                        <div class="col-md-12">
-                                            <label class=" fs-5 fw-semibold form-label">Asignar Accesos y Permisos  - {{ $usuario->nombres}} {{ $usuario->apellidos}}</label>
-                                        </div>
-                                    </div>
-                                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5 g-xl-9">
-                                        @foreach ($menuAll as $im => $menu)
-                                            <div class="col-md-4">
-                                                <div class="card card-flush h-md-100">
-                                                    <div class="card-header">
-                                                        <div class="card-title">
-                                                            <h2>{{ $menu['descripcion'] }}</h2>
+                            </div>
+                            <!--end::Card header-->
+
+
+                            <!--begin::Card body-->
+                            <div class="card-body py-8">
+
+                                <div class="row g-6">
+
+                                    @foreach ($menuAll as $im => $menu)
+                                        <div class="col-12 col-md-6 col-xl-4">
+
+                                            <!--begin::Module card-->
+                                            <div class="card card-bordered h-100 shadow-sm">
+
+                                                <!--begin::Header-->
+                                                <div class="card-header min-h-70px">
+
+                                                    <div class="card-title">
+
+                                                        <div class="d-flex align-items-center">
+
+                                                            <div class="symbol symbol-40px me-4">
+
+                                                                <div class="symbol-label bg-light-primary">
+
+                                                                    <i class="ki-outline ki-category fs-2 text-primary"></i>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div>
+                                                                <span class="fw-bold fs-5 text-gray-800">
+                                                                    {{ $menu['descripcion'] }}
+                                                                </span>
+                                                            </div>
+
                                                         </div>
+
                                                     </div>
-                                                    <div class="card-body pt-1">
-                                                        <div class="m-0">
-                                                            @foreach ($menu['submenu'] as $is => $submenu)
-                                                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0"
-                                                                    data-bs-toggle="collapse"
-                                                                    data-bs-target="#kt_job_1_2{{ $im . '-' . $is }}">
+
+                                                </div>
+                                                <!--end::Header-->
+
+
+                                                <!--begin::Body-->
+                                                <div class="card-body pt-5">
+
+                                                    @foreach ($menu['submenu'] as $is => $submenu)
+                                                        @php
+                                                            $collapseId = 'submenu_' . $im . '_' . $is;
+
+                                                            if ($submenu['id'] == 0) {
+                                                                $submenuChecked = $menuAdicional;
+                                                            } else {
+                                                                $submenuChecked = revisarMenu(
+                                                                    $submenu['id'],
+                                                                    $elemento,
+                                                                    'usuario',
+                                                                );
+                                                            }
+                                                        @endphp
+
+
+                                                        <!--begin::Submenu-->
+                                                        <div class="border border-gray-300 border-dashed rounded mb-4">
+
+                                                            <!--begin::Submenu header-->
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-between px-4 py-4">
+
+                                                                <div class="d-flex align-items-center">
+
                                                                     <div
-                                                                        class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                        @if ($submenu['id'] == 0)
-                                                                         <input type="checkbox" value="{{ $submenu['id'] }}" name="accesos[]" class="form-check-input" {{ $menuAdicional ? 'checked' : '' }} />
-                                                                        @else
-                                                                        <input type="checkbox" value="{{ $submenu['id'] }}" name="accesos[]" class="form-check-input" {{ revisarMenu($submenu['id'], $elemento, 'usuario') ? 'checked' : '' }} />
-                                                                        @endif
+                                                                        class="form-check form-check-custom form-check-solid me-4">
+
+                                                                        <input class="form-check-input submenu-check"
+                                                                            type="checkbox" value="{{ $submenu['id'] }}"
+                                                                            name="accesos[]"
+                                                                            id="submenu_check_{{ $im }}_{{ $is }}"
+                                                                            data-permission-container="#{{ $collapseId }}"
+                                                                            {{ $submenuChecked ? 'checked' : '' }}>
+
                                                                     </div>
 
-                                                                    <h4 class="text-gray-700 fw-bold cursor-pointer mb-0">
-                                                                        {{ $submenu['descripcion'] }}</h4>
+                                                                    <label
+                                                                        class="fw-semibold fs-6 text-gray-800 cursor-pointer"
+                                                                        for="submenu_check_{{ $im }}_{{ $is }}">
+
+                                                                        {{ $submenu['descripcion'] }}
+
+                                                                    </label>
 
                                                                 </div>
-                                                                <div id="kt_job_1_2{{ $im . '-' . $is }}"
-                                                                    class="collapse fs-6 ms-1">
-                                                                    @foreach ($submenu['permisos'] as $permiso)
-                                                                        <div class="mb-4">
-                                                                            <div
-                                                                                class="d-flex align-items-center ps-10 mb-n1">
-                                                                                <div
-                                                                                    class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                                    <input type="checkbox" value="{{ $permiso['name'] }}" name="permisos[]" class="form-check-input" {{ revisarPermiso($permiso['name'], $elemento, 'usuario') ? 'checked' : '' }} />
-                                                                                </div>
 
-                                                                                <div class="text-gray-600 fw-semibold fs-6">
-                                                                                    {{ $permiso['descripcion'] }}
-                                                                                </div>
-                                                                            </div>
+
+                                                                @if (count($submenu['permisos']) > 0)
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-icon btn-light-primary"
+                                                                        data-bs-toggle="collapse"
+                                                                        data-bs-target="#{{ $collapseId }}"
+                                                                        aria-expanded="{{ $submenuChecked ? 'true' : 'false' }}">
+
+                                                                        <i class="ki-outline ki-down fs-2"></i>
+
+                                                                    </button>
+                                                                @endif
+
+                                                            </div>
+                                                            <!--end::Submenu header-->
+
+
+                                                            @if (count($submenu['permisos']) > 0)
+                                                                <!--begin::Permissions-->
+                                                                <div id="{{ $collapseId }}"
+                                                                    class="collapse {{ $submenuChecked ? 'show' : '' }}">
+
+                                                                    <div class="separator separator-dashed">
+                                                                    </div>
+
+                                                                    <div class="px-5 py-4 bg-light rounded-bottom">
+
+                                                                        <div
+                                                                            class="text-muted fw-bold fs-7 text-uppercase mb-4">
+
+                                                                            Permisos
 
                                                                         </div>
-                                                                    @endforeach
-                                                                </div>
-                                                            @endforeach
-                                                            <div class="separator separator-dashed"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-center flex-row-fluid pt-12">
-                                    <a href="{{ route('usuarios.index') }}" class="btn btn-danger me-3 " >Cancelar</a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <span class="indicator-label">Asignar</span>
-                                    </button>
-                                </div>
-                                <!--end::Actions-->
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
+
+                                                                        @foreach ($submenu['permisos'] as $permiso)
+                                                                            @php
+                                                                                $permisoChecked = revisarPermiso(
+                                                                                    $permiso['name'],
+                                                                                    $elemento,
+                                                                                    'usuario',
+                                                                                );
+                                                                            @endphp
+
+
+                                                                            <div
+                                                                                class="d-flex align-items-center justify-content-between mb-4">
+
+                                                                                <div class="d-flex align-items-center">
+
+                                                                                    <div
+                                                                                        class="form-check form-check-custom form-check-solid me-3">
+
+                                                                                        <input
+                                                                                            class="form-check-input permiso-check"
+                                                                                            type="checkbox"
+                                                                                            value="{{ $permiso['name'] }}"
+                                                                                            name="permisos[]"
+                                                                                            id="permiso_{{ $im }}_{{ $is }}_{{ $loop->index }}"
+                                                                                            {{ $permisoChecked ? 'checked' : '' }}>
+
+                                                                                    </div>
+
+                                                                                    <label
+                                                                                        class="text-gray-700 fw-semibold cursor-pointer"
+                                                                                        for="permiso_{{ $im }}_{{ $is }}_{{ $loop->index }}">
+
+                                                                                        {{ $permiso['descripcion'] }}
+
+                                                                                    </label>
+
+                                                                                </div>
+
+                                                                            </div>
+                                                                        @endforeach
+
+                                                                    </div>
+
+                                                                </div>
+                                                                <!--end::Permissions-->
+                                                            @endif
+
+                                                        </div>
+                                                        <!--end::Submenu-->
+                                                    @endforeach
+
+                                                </div>
+                                                <!--end::Body-->
+
+                                            </div>
+                                            <!--end::Module card-->
+
+                                        </div>
+                                    @endforeach
+
+                                </div>
+
+                            </div>
+                            <!--end::Card body-->
+
+
+                            <!--begin::Card footer-->
+                            <div class="card-footer">
+
+                                <div class="d-flex justify-content-end align-items-center">
+
+                                    <a href="{{ route('usuarios.index') }}" class="btn btn-light me-3">
+
+                                        <i class="ki-outline ki-cross fs-2"></i>
+
+                                        Cancelar
+
+                                    </a>
+
+
+                                    <button type="submit" class="btn btn-primary" id="btnGuardarPermisos">
+
+                                        <span class="indicator-label">
+
+                                            <i class="ki-outline ki-check fs-2"></i>
+
+                                            Guardar permisos
+
+                                        </span>
+
+                                        <span class="indicator-progress">
+
+                                            Guardando...
+
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2">
+                                            </span>
+
+                                        </span>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+                            <!--end::Card footer-->
+
+                        </div>
+                        <!--end::Card-->
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 @endsection

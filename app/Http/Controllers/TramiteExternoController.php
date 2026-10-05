@@ -24,8 +24,9 @@ class TramiteExternoController extends Controller
 {
     public function __construct(Request $request)
     {
+        
+        $this->middleware('can:tramite-externo.index')->only('index');
         /*
-        $this->middleware('can:usuarios.index')->only('index');
         $this->middleware('can:usuarios.create')->only('usuarios');
         $this->middleware('can:usuarios.edit')->only('edit');
         $this->middleware('can:usuarios.destroy')->only('destroy');

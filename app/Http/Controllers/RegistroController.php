@@ -11,6 +11,7 @@ use App\Models\Usuario;
 use App\Models\RegistroPendiente;
 use App\Models\TipoUsuario;
 use App\Mail\VerificacionRegistroMail;
+use Illuminate\Support\Facades\DB;
 
 class RegistroController extends Controller
 {
@@ -300,7 +301,7 @@ class RegistroController extends Controller
 
         // Evitar que el mutator de password vuelva a hashear
         // La contraseña ya viene hasheada desde registro_pendiente
-        \DB::table('usuario')->where('id', $usuario->id)->update([
+        DB::table('usuario')->where('id', $usuario->id)->update([
             'password' => $registro->password,
         ]);
 
