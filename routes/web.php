@@ -8,6 +8,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\TipoUsuarioController;
 
 use App\Http\Controllers\TramiteExternoController;
+use App\Http\Controllers\TramiteVirtualController;
 
 use App\Http\Controllers\SolicitanteController;
 
@@ -66,7 +67,9 @@ Route::get('filtro-usuario', [UsuarioController::class, 'autocompletado'])->name
 
 Route::resource('tipo-usuario', TipoUsuarioController::class);
 Route::post('tipo-usuario/filtro', [TipoUsuarioController::class, 'filtro'])->name('tipo-usuario.filtro');
-Route::put('estado-usuarios/{id}', [UsuarioController::class, 'estado'])->name('usuarios.estado');
+Route::get('apiTipoUsuarios', [TipoUsuarioController::class, 'apiTipoUsuarios'])->name('apiTipoUsuarios.index');
+
+Route::resource('tramite-virtual', TramiteVirtualController::class);
 
 Route::resource('tramite-externo', TramiteExternoController::class);
 Route::post('filterEquipo', [TramiteExternoController::class, 'filterEquipo']);

@@ -2932,12 +2932,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-
-document.addEventListener('DOMContentLoaded', function () {
-    document.body.classList.add('app-sidebar-minimize');
-});
-
-
 $(".destinoCreate").select2({
     width: "100%",
     placeholder: "Buscar",
@@ -2961,3 +2955,144 @@ $(".destinoCreate").select2({
         cache: true,
     },
 });
+
+// ============================================================
+// TIPO USUARIO
+// ============================================================
+
+if (document.getElementById("table_tipoUsuario")) {
+    const table_tipoUsuario = $("#table_tipoUsuario").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/apiTipoUsuarios",
+            type: "GET",
+            data: function (d) {
+                d.search = {
+                    value: $("#documentoTipousuario").val().trim(),
+                };
+            },
+        },
+        columns: [
+            {
+                data: null,
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+                className: "text-center",
+                orderable: false,
+                searchable: false,
+            },
+            {
+                data: "descripcion",
+                render: function (data, type, row) {
+                    return `<span class="fw-bold text-gray-800">${row.descripcion ?? ""}</span>`;
+                },
+            },
+            {
+                data: "acciones",
+                orderable: false,
+                searchable: false,
+                className: "text-center",
+            },
+        ],
+        order: [[1, "asc"]],
+        responsive: true,
+        lengthMenu: [
+            [10, 25, 50, 100],
+            [10, 25, 50, 100],
+        ],
+        dom:
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row mt-5'<'col-sm-6'i><'col-sm-6 d-flex justify-content-end'p>>",
+        drawCallback: function () {
+            document
+                .querySelectorAll('[data-bs-toggle="tooltip"]')
+                .forEach(function (elemento) {
+                    bootstrap.Tooltip.getOrCreateInstance(elemento);
+                });
+        },
+    });
+
+    let tTipoUsuario;
+    $("#documentoTipousuario").on("keyup", function () {
+        clearTimeout(tTipoUsuario);
+        tTipoUsuario = setTimeout(() => table_tipoUsuario.ajax.reload(), 250);
+    });
+}
+
+const form_tipoUsuarioGuardar = document.querySelector("#form_tipoUsuarioGuardar");
+if (form_tipoUsuarioGuardar) {
+    form_tipoUsuarioGuardar.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const action = "/tipo-usuario";
+        const formDataT = new FormData(form_tipoUsuarioGuardar);
+
+        axios.post(action, formDataT).then(function (response) {
+            const respuesta = response.data;
+            const inputs = form_tipoUsuarioGuardar.querySelectorAll(".validate_modal");
+
+            inputs.forEach((input) => {
+                input.classList.remove("is-invalid");
+                const wrapper = input.closest(".fv-row") || input.closest(".input-group");
+                const feedback = wrapper ? wrapper.querySelector(".invalid-feedback") : null;
+                if (feedback) feedback.innerHTML = "";
+                
+                if (respuesta.errorForm && respuesta.errores[input.name]) {
+                    input.classList.add("is-invalid");
+                    if (input.closest(".input-group")) {
+                        input.closest(".input-group").classList.add("is-invalid");
+                    }
+                    if (feedback) {
+                        feedback.innerHTML = respuesta.errores[input.name][0];
+                    }
+                }
+            });
+
+            if (!respuesta.errorForm && respuesta.success) {
+                $("#modal_tipoUsuario").modal("hide");
+                form_tipoUsuarioGuardar.reset();
+                if ($.fn.DataTable.isDataTable('#table_tipoUsuario')) {
+                    $('#table_tipoUsuario').DataTable().ajax.reload();
+                } else {
+                    window.location.href = respuesta.ruta;
+                }
+            }
+        });
+    });
+}
+
+const form_tipoUsuarioEditar = document.querySelector("#form_tipoUsuarioEditar");
+if (form_tipoUsuarioEditar) {
+    form_tipoUsuarioEditar.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const action = form_tipoUsuarioEditar.getAttribute("action");
+        const formDataT = new FormData(form_tipoUsuarioEditar);
+
+        axios.post(action, formDataT).then(function (response) {
+            const respuesta = response.data;
+            const inputs = form_tipoUsuarioEditar.querySelectorAll(".validate_modal");
+
+            inputs.forEach((input) => {
+                input.classList.remove("is-invalid");
+                const wrapper = input.closest(".fv-row") || input.closest(".input-group");
+                const feedback = wrapper ? wrapper.querySelector(".invalid-feedback") : null;
+                if (feedback) feedback.innerHTML = "";
+                
+                if (respuesta.errorForm && respuesta.errores[input.name]) {
+                    input.classList.add("is-invalid");
+                    if (input.closest(".input-group")) {
+                        input.closest(".input-group").classList.add("is-invalid");
+                    }
+                    if (feedback) {
+                        feedback.innerHTML = respuesta.errores[input.name][0];
+                    }
+                }
+            });
+
+            if (!respuesta.errorForm && respuesta.success) {
+                window.location.href = respuesta.ruta;
+            }
+        });
+    });
+}

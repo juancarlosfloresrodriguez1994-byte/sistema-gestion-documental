@@ -279,8 +279,8 @@ class RegistroController extends Controller
             ]);
         }
 
-        // Buscar tipo de usuario por defecto "DOCENTE" o el primer tipo disponible
-        $tipoUsuario = TipoUsuario::where('descripcion', 'LIKE', '%DOCENTE%')->first();
+        // Buscar tipo de usuario por defecto "NORMAL" o el primer tipo disponible
+        $tipoUsuario = TipoUsuario::where('descripcion', 'LIKE', '%NORMAL%')->first();
         if (!$tipoUsuario) {
             $tipoUsuario = TipoUsuario::first();
         }

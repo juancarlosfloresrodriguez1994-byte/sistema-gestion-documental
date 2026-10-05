@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="modal-body scroll-y mx-5 my-7">
-                <form id="kt_modal_update_role_form" class="form" action="#">
+                <form id="form_tipoUsuarioGuardar" class="form" action="#">
                     <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_update_role_scroll"
                         data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}"
                         data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_update_role_header"
@@ -18,7 +18,9 @@
                                 <span>Tipo de Usuario</span>
                             </label>
 
-                            <input class="form-control form-control-solid" name="descripcion" id="descripcion" />
+                            <input class="form-control form-control-solid validate_modal" name="descripcion"
+                                id="descripcion_tipoUsuario" />
+                            <div class="invalid-feedback"></div>
                         </div>
                         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5 g-xl-9">
                             @foreach ($menuAll as $im => $menu)
@@ -34,19 +36,19 @@
                                                 @foreach ($menu['submenu'] as $is => $submenu)
                                                     <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0"
                                                         data-bs-toggle="collapse"
-                                                        data-bs-target="#kt_job_1_2{{ $im . '-' . $is }}">
+                                                        data-bs-target="#kt_crear_tipo_{{ $im . '-' . $is }}">
                                                         <div
                                                             class="form-check form-check-sm form-check-custom form-check-solid">
-                                                            <input name="idusuario"
-                                                                class="form-check-input idresoluciones" data-id=""
-                                                                type="checkbox" value="" />
+                                                            <input name="accesos[]"
+                                                                class="form-check-input idresoluciones"
+                                                                type="checkbox" value="{{ $submenu['id'] }}" />
                                                         </div>
 
-                                                        <h4 class="text-gray-700 fw-bold cursor-pointer mb-0">
+                                                        <h4 class="text-gray-700 fw-bold cursor-pointer mb-0 ms-3">
                                                             {{ $submenu['descripcion'] }}</h4>
 
                                                     </div>
-                                                    <div id="kt_job_1_2{{ $im . '-' . $is }}"
+                                                    <div id="kt_crear_tipo_{{ $im . '-' . $is }}"
                                                         class="collapse fs-6 ms-1">
                                                         @foreach ($submenu['permisos'] as $permiso)
                                                             <div class="mb-4">
@@ -58,7 +60,7 @@
                                                                             value="{{ $permiso['name'] }}" />
                                                                     </div>
 
-                                                                    <div class="text-gray-600 fw-semibold fs-6">
+                                                                    <div class="text-gray-600 fw-semibold fs-6 ms-3">
                                                                         {{ $permiso['descripcion'] }}
                                                                     </div>
                                                                 </div>
@@ -77,7 +79,7 @@
                     </div>
                     <div class="d-flex flex-center flex-row-fluid pt-12">
                         <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="btn-guardar" class="btn btn-primary">
+                        <button type="submit" id="btn-guardarTipoUsuario" class="btn btn-primary">
                             <span class="indicator-label">Agregar</span>
                         </button>
                     </div>
