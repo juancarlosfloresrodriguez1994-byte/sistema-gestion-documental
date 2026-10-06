@@ -19,8 +19,8 @@
                 </div>
 
                 <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-                    <a href="index.html" class="d-lg-none">
-                        <img alt="Logo" src="assets/media/logos/default-small.svg" class="h-30px" />
+                    <a href="{{ route('inicio') }}" class="d-lg-none">
+                        <img alt="Logo" src="{{ url('storage/images/LOGO_UGELAA.png') }}" class="h-30px" />
                     </a>
                 </div>
 
@@ -35,16 +35,17 @@
             <!--begin::Sidebar-->
             <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true"
                 data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}"
-                data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start"
+                data-kt-drawer-overlay="true" data-kt-drawer-width="260px" data-kt-drawer-direction="start"
                 data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
+
                 <!--begin::Logo-->
-                <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
+                <div class="app-sidebar-logo px-6 d-flex align-items-center justify-content-between" id="kt_app_sidebar_logo">
                     <!--begin::Logo image-->
-                    <a href="{{ route('inicio') }}">
+                    <a href="{{ route('inicio') }}" class="d-flex align-items-center gap-3 sidebar-logo-link">
                         <img alt="Logo" src="{{ url('storage/images/LOGO_UGELAA.png') }}"
-                            class="h-50px app-sidebar-logo-default" />
+                            class="sidebar-logo-img app-sidebar-logo-default" />
                         <img alt="Logo" src="{{ url('storage/images/LOGO_UGELAA.png') }}"
-                            class="h-30px app-sidebar-logo-minimize" />
+                            class="sidebar-logo-img-min app-sidebar-logo-minimize" />
                     </a>
 
                     <div id="kt_app_sidebar_toggle"
@@ -59,6 +60,7 @@
 
                 </div>
                 <!--end::Logo-->
+
                 <!--begin::sidebar menu-->
                 @include('layouts.menu')
 

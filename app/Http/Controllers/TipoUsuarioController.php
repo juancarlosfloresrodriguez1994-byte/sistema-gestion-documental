@@ -247,26 +247,76 @@ class TipoUsuarioController extends Controller
             ]);
         }
 
-        // Recopilar accesos (menu_ids)
-        $accesos = $request->input('accesos', []);
-        $accesosCSV = implode(',', array_filter($accesos));
+        // 1. Obtener accesos y permisos ANTERIORES
+        $accesosAnteriores = explode(',', $tipoUsuario->accesos);
+        $permisosAnteriores = PermisosTipoUsuario::where('tipoUsuario_id', $id)->pluck('permiso')->toArray();
 
-        // Actualizar tipo usuario
+        // 2. Nuevos accesos y permisos desde el form
+        $accesosNuevos = $request->input('accesos', []);
+        $accesosCSV = implode(',', array_filter($accesosNuevos));
+        $permisosNuevos = $request->input('permisos', []);
+
+        // 3. Actualizar TipoUsuario
         $tipoUsuario->update([
             'descripcion' => $request->descripcion,
             'accesos'     => $accesosCSV,
         ]);
 
-        // Eliminar permisos anteriores y reasignar
+        // 4. Actualizar tabla PermisosTipoUsuario
         PermisosTipoUsuario::where('tipoUsuario_id', $id)->delete();
-
-        $permisos = $request->input('permisos', []);
-
-        foreach ($permisos as $permiso) {
+        foreach ($permisosNuevos as $permiso) {
             PermisosTipoUsuario::create([
                 'permiso'        => $permiso,
                 'tipoUsuario_id' => $tipoUsuario->id,
             ]);
+        }
+
+        // ==========================================
+        // 5. SINCRONIZACIÓN INTELIGENTE A USUARIOS
+        // ==========================================
+        // Para no borrar permisos exclusivos, calculamos qué se agregó y qué se quitó
+        $accesosAgregados = array_diff($accesosNuevos, $accesosAnteriores);
+        $accesosQuitados  = array_diff($accesosAnteriores, $accesosNuevos);
+
+        $permisosAgregados = array_diff($permisosNuevos, $permisosAnteriores);
+        $permisosQuitados  = array_diff($permisosAnteriores, $permisosNuevos);
+
+        $usuarios = \App\Models\Usuario::where('tipoUsuario_id', $id)->get();
+
+        foreach ($usuarios as $user) {
+            // --- Sincronizar Accesos (Menús) ---
+            // Quitar los que se desmarcaron
+            if (!empty($accesosQuitados)) {
+                \Illuminate\Support\Facades\DB::table('privilegios')
+                    ->where('usuario_id', $user->id)
+                    ->whereIn('menu_id', $accesosQuitados)
+                    ->delete();
+            }
+            // Agregar los nuevos
+            foreach ($accesosAgregados as $acc) {
+                \Illuminate\Support\Facades\DB::table('privilegios')->updateOrInsert([
+                    'usuario_id' => $user->id,
+                    'menu_id'    => $acc
+                ]);
+            }
+
+            // --- Sincronizar Permisos (Spatie) ---
+            // Quitar los que se desmarcaron
+            foreach ($permisosQuitados as $perm) {
+                if ($user->hasPermissionTo($perm)) {
+                    $user->revokePermissionTo($perm);
+                }
+            }
+            // Agregar los nuevos
+            foreach ($permisosAgregados as $perm) {
+                $permiso_registrado = \Spatie\Permission\Models\Permission::where('name', $perm)->first();
+                if (!$permiso_registrado) {
+                    \Spatie\Permission\Models\Permission::create(['name' => $perm]);
+                }
+                if (!$user->hasPermissionTo($perm)) {
+                    $user->givePermissionTo($perm);
+                }
+            }
         }
 
         return response()->json([

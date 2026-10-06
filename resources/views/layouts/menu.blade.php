@@ -14,6 +14,11 @@
             data-kt-scroll-offset="5px"
             data-kt-scroll-save-state="true">
 
+            {{-- Sección label --}}
+            <div class="menu-label-section px-3 mb-3">
+                <span class="menu-section-label">NAVEGACIÓN</span>
+            </div>
+
             <!--begin::Menu-->
             <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6"
                 id="kt_app_sidebar_menu"
@@ -43,7 +48,7 @@
                         <div data-kt-menu-trigger="click"
                             class="menu-item menu-accordion {{ $parentActive ? 'show' : '' }}">
 
-                            <span class="menu-link">
+                            <span class="menu-link menu-link-custom">
 
                                 <span class="menu-icon">
                                     <i class="{{ $menu['icono'] }}">
@@ -99,7 +104,7 @@
                             <div class="menu-item">
 
                                 <a href="{{ route($menu['url']) }}"
-                                    class="menu-link {{ $singleActive ? 'active' : '' }}">
+                                    class="menu-link menu-link-custom {{ $singleActive ? 'active' : '' }}">
 
                                     <span class="menu-icon">
                                         <i class="{{ $menu['icono'] }}">

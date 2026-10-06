@@ -2854,3 +2854,136 @@ body.te-body {
         height: 36px;
     }
 }
+
+/* ============================================
+   SIDEBAR - Custom Design
+   ============================================ */
+
+/* ── Logo Section ── */
+#kt_app_sidebar_logo {
+    min-height: 70px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-logo-link {
+    text-decoration: none !important;
+}
+
+.sidebar-logo-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    transition: all 0.3s ease;
+    filter: brightness(0) invert(1);
+}
+
+.sidebar-logo-img-min {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    transition: all 0.3s ease;
+    filter: brightness(0) invert(1);
+}
+
+/* ── Menu Section Label ── */
+.menu-label-section {
+    margin-top: 4px;
+}
+
+.menu-section-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    display: block;
+    padding: 0 8px;
+}
+
+/* Ocultar label cuando sidebar está minimizado */
+body.app-sidebar-minimize .menu-label-section {
+    display: none;
+}
+
+/* ── Menu Link Custom Hover ── */
+.menu-link-custom {
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    margin: 2px 0 !important;
+}
+
+.menu-link-custom:hover {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.menu-link-custom.active {
+    background: linear-gradient(135deg, #0073B7 0%, #005a91 100%) !important;
+    box-shadow: 0 2px 8px rgba(0, 115, 183, 0.3) !important;
+}
+
+/* ── Active submenu item ── */
+.menu-sub .menu-link.active {
+    background: linear-gradient(135deg, #0073B7 0%, #005a91 100%) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 6px rgba(0, 115, 183, 0.25) !important;
+}
+
+.menu-sub .menu-link:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 6px !important;
+}
+
+/* ── Sidebar Toggle Button ── */
+#kt_app_sidebar_toggle {
+    background-color: #0073B7 !important;
+    border: 2px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.2s ease !important;
+}
+
+#kt_app_sidebar_toggle:hover {
+    background-color: #005a91 !important;
+    transform: translateX(-50%) translateY(-50%) scale(1.1) !important;
+}
+
+#kt_app_sidebar_toggle i {
+    color: #fff !important;
+}
+
+/* ============================================
+   MODAL - Tipo de Usuario
+   ============================================ */
+
+/* ── Card modulo acceso ── */
+.card-modulo-acceso {
+    border: 1px solid #e8ecf1 !important;
+    border-radius: 10px !important;
+    overflow: hidden;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card-modulo-acceso:hover {
+    box-shadow: 0 4px 16px rgba(0, 115, 183, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+/* ── Submenu items en modal ── */
+.card-modulo-acceso .bg-gray-50 {
+    background-color: #f9fafb !important;
+}
+
+.card-modulo-acceso .bg-gray-50:hover {
+    background-color: #f1f3f7 !important;
+}
+
+/* ── Modal scroll area ── */
+.mh-400px {
+    max-height: 400px;
+}
+
+/* ============================================
+   FOOTER - Custom
+   ============================================ */
+#kt_app_footer {
+    border-top: 1px solid #eef0f4;
+}
