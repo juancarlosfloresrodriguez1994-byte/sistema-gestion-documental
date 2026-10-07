@@ -18,8 +18,22 @@ class TramiteVirtualController extends Controller
      */
     public function index()
     {
+        $usuario = auth()->user();
+
+        // Separar apellidos si están presentes
+        $apellidoPaterno = '';
+        $apellidoMaterno = '';
+        if ($usuario && !empty($usuario->apellidos)) {
+            $parts = explode(' ', trim($usuario->apellidos), 2);
+            $apellidoPaterno = $parts[0] ?? '';
+            $apellidoMaterno = $parts[1] ?? '';
+        }
+
         $opciones = [
-            'titlePage' => 'Trámite Virtual',
+            'titlePage'       => 'Trámite Virtual',
+            'usuario'         => $usuario,
+            'apellidoPaterno' => $apellidoPaterno,
+            'apellidoMaterno' => $apellidoMaterno,
         ];
 
         return view('tramiteVirtual.index', $opciones);
