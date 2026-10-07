@@ -129,7 +129,7 @@
                         </button>
                         <button type="submit" id="btn-guardarTipoUsuario" class="btn btn-primary btn-sm px-6">
                             <i class="ki-outline ki-check fs-4 me-1"></i>
-                            <span class="indicator-label">Agregar</span>
+                            <span class="indicator-label">Guardar</span>
                         </button>
                     </div>
                 </form>

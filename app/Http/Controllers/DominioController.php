@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Dominio;
+use Illuminate\Support\Facades\DB;
 
 class DominioController extends Controller
 {
@@ -39,32 +40,48 @@ class DominioController extends Controller
 
         $term = trim($request->term ?? '');
 
-        $elementos = Dominio::query()
-            ->where(function ($query) use ($term) {
+        $elementos = DB::table('dominio as d')
+            ->select(
+                'd.id  as id',
 
-                $query->where('domi_nombre', 'like', '%' . $term . '%');
-            })
-            ->orderBy('domi_nombre')
-            ->take(20)
+                DB::raw("
+                CASE d.domi_tipo
+                    WHEN 'AREA' THEN
+                        CONCAT('A: ', d.domi_nombre)
+
+                    WHEN 'EQUIPO' THEN
+                        CONCAT(
+                            'E: ',
+                            d.domi_idarea_str,
+                            ' > ',
+                            d.domi_nombre
+                        )
+
+                    WHEN 'SUBEQUIPO' THEN
+                        CONCAT(
+                            'SE: ',
+                            d.domi_idarea_str,
+                            ' > ',
+                            d.domi_idequipo,
+                            ' > ',
+                            d.domi_nombre
+                        )
+                END AS text
+            "),
+
+                'd.domi_nombre as destino',
+                'd.domi_Tipo as tipo'
+            )
+            ->where('d.domi_nombre', 'like', "%{$term}%")
+            ->whereIn('d.domi_tipo', [
+                'AREA',
+                'EQUIPO',
+                'SUBEQUIPO'
+            ])
+            ->limit(10)
             ->get();
 
-        $respuesta = [];
-
-        foreach ($elementos as $elemento) {
-
-
-            $texto = $elemento->domi_tipo . ': ' . $elemento->domi_nombre;
-
-            $respuesta[] = [
-                'id'   => $elemento->id,
-                'text' => $texto
-            ];
-        }
-
-
-        // dd($respuesta);
-
-        return response()->json($respuesta);
+        return response()->json($elementos);
     }
 
     /**
