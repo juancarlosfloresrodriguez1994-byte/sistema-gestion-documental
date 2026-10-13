@@ -123,18 +123,19 @@
                     </div>
                     <div class="fv-row mb-9">
                         <label class="fs-6 fw-semibold mb-2">
-                            Destino - Seleccione el nombre del area (A), equipo (E), subequipo (SE)
+                            Destino Institucional
                         </label>
-                        <div class="d-flex align-items-center">
-
-                            <div class="flex-grow-1">
-                                <select id="destino_id" class="form-select destinoCreate validate_modal"
-                                    name="destino_id" data-placeholder="Seleccionar" data-allow-clear="true">
-                                    <option value=""></option>
-                                </select>
-                            </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light-primary text-primary fw-bold">
+                                <i class="ki-outline ki-bank fs-2 text-primary me-2"></i> DOMINIO DESTINO
+                            </span>
+                            <input type="text" class="form-control bg-light fw-bold text-gray-800"
+                                value="DIRECCIÓN (ID: 6) - MÁXIMA JERARQUÍA INSTITUCIONAL" readonly />
+                            <input type="hidden" name="dominio_destino_id" value="6" />
                         </div>
-                        <div class="invalid-feedback"></div>
+                        <div class="form-text text-muted">
+                            Por disposición institucional, todo expediente externo ingresa directamente a <strong>La Dirección</strong>.
+                        </div>
                     </div>
                     <div class="fv-row mb-9">
                         <label class="fs-6 fw-semibold mb-2">Asunto</label>

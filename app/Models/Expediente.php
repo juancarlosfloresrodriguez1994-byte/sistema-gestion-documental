@@ -30,11 +30,33 @@ class Expediente extends Model
         'estado',
         'mes',
         'numero_mes',
-        'usuario_actual_id',
-        'area_actual_id',
-        'equipo_actual_id',
-        'sub_equipo_actual_id',
+        'dominio_destino_id',
         'usuario_registro_id',
         'documento_adjunto'
     ];
+
+    public function dominioDestino()
+    {
+        return $this->belongsTo(Dominio::class, 'dominio_destino_id');
+    }
+
+    public function movimientos()
+    {
+        return $this->hasMany(ExpedienteMovimiento::class, 'expediente_id');
+    }
+
+    public function solicitante()
+    {
+        return $this->belongsTo(Solicitante::class, 'solicitante_id');
+    }
+
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class, 'tipoDocumento_id');
+    }
+
+    public function usuarioRegistro()
+    {
+        return $this->belongsTo(Usuario::class, 'usuario_registro_id');
+    }
 }

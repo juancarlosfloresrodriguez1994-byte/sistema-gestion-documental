@@ -31,7 +31,14 @@ class Usuario extends Authenticatable
         'area_id',
         'equipo_id',
         'sub_equipo_id',
+        'dominio_id',
+        'cargo',
     ];
+
+    public function dominio()
+    {
+        return $this->belongsTo(Dominio::class, 'dominio_id', 'id');
+    }
 
     public function tipoUsuario()
     {

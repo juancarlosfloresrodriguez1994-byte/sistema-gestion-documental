@@ -15,6 +15,7 @@ use App\Http\Controllers\SolicitanteController;
 use App\Http\Controllers\ConsultarApisController;
 
 use App\Http\Controllers\DominioController;
+use App\Http\Controllers\DominioUsuarioController;
 
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\RecuperarPasswordController;
@@ -81,4 +82,11 @@ Route::get('filtrosolicitante', [SolicitanteController::class, 'autocompletadoSo
 Route::post('BuscarDocumentoUsuario', [ConsultarApisController::class, 'BuscarDocumentoUsuario'])->name('BuscarDocumentoUsuario.index');
 
 Route::get('filtrodominio', [DominioController::class, 'autocompletadoDominio']);
+
+// ─── Dominio Usuario ───
+Route::get('dominio-usuario', [DominioUsuarioController::class, 'index'])->name('dominio-usuario.index');
+Route::get('apiDominioUsuarios', [DominioUsuarioController::class, 'apiDominioUsuarios'])->name('dominio-usuario.api');
+Route::post('dominio-usuario/asignar', [DominioUsuarioController::class, 'asignar'])->name('dominio-usuario.asignar');
+Route::delete('dominio-usuario/desvincular/{id}', [DominioUsuarioController::class, 'desvincular'])->name('dominio-usuario.desvincular');
+Route::get('dominio-usuario/filtro', [DominioUsuarioController::class, 'filtroDominio'])->name('dominio-usuario.filtro');
 

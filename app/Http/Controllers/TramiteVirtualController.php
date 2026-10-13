@@ -33,11 +33,11 @@ class TramiteVirtualController extends Controller
 
         // Consulta de expedientes/trámites virtuales del usuario
         $query = Expediente::leftJoin('tipo_documento', 'tipo_documento.id', '=', 'tramite_externo.tipoDocumento_id')
-            ->leftJoin('area', 'area.id', '=', 'tramite_externo.area_actual_id')
+            ->leftJoin('dominio', 'dominio.id', '=', 'tramite_externo.dominio_destino_id')
             ->select(
                 'tramite_externo.*',
                 'tipo_documento.descripcion as tipo_documento_nombre',
-                'area.nombre_area as area_actual_nombre'
+                'dominio.domi_nombre as area_actual_nombre'
             )
             ->where(function ($q) use ($usuario, $solicitanteId) {
                 $q->where('tramite_externo.usuario_registro_id', $usuario->id);
@@ -247,11 +247,7 @@ class TramiteVirtualController extends Controller
                 'anio'                 => $anio,
                 'estado'               => 'POR_RECIBIR',
                 'mes'                  => $mes,
-                'numero_mes'           => $numero_mes,
-                'usuario_actual_id'    => $usuarioDestino->id,
-                'area_actual_id'       => $areaId,
-                'equipo_actual_id'     => null,
-                'sub_equipo_actual_id' => null,
+                'dominio_destino_id'   => 6,
                 'usuario_registro_id'  => $usuario->id,
                 'documento_adjunto'    => $adjuntoPath,
             ]);
@@ -259,14 +255,10 @@ class TramiteVirtualController extends Controller
             // 5. Registrar movimiento inicial
             ExpedienteMovimiento::create([
                 'expediente_id'        => $expediente->id,
-                'area_origen_id'       => null,
-                'equipo_origen_id'     => null,
-                'sub_equipo_origen_id' => null,
+                'dominio_origen_id'    => null,
                 'usuario_origen_id'    => $usuario->id,
-                'area_destino_id'      => $areaId,
-                'equipo_destino_id'    => null,
-                'sub_equipo_destino_id'=> null,
-                'usuario_destino_id'   => $usuarioDestino->id,
+                'dominio_destino_id'   => 6,
+                'usuario_destino_id'   => $usuarioDestino ? $usuarioDestino->id : null,
                 'tipo_movimiento'      => 'REGISTRO_VIRTUAL',
                 'estado'               => 'POR_RECIBIR',
                 'fecha_movimiento'     => now()->format('Y-m-d H:i:s'),

@@ -23,4 +23,9 @@ class Dominio extends Model
         'domi_idequipo_str',
         'domi_idold',
     ];
+
+    public function usuarios()
+    {
+        return $this->hasMany(Usuario::class, 'dominio_id', 'id');
+    }
 }

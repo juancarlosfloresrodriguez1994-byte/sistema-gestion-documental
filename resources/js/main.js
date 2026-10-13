@@ -744,10 +744,20 @@ if (form_tramiteExterno) {
                 }
 
              
-                   $("#recdartar_tramiteExterno").modal("hide");
-                   // datatable.reload();
-
-                   cargarBandeja();
+                $("#recdartar_tramiteExterno").modal("hide");
+                form_tramiteExterno.reset();
+                if (typeof Swal !== "undefined") {
+                    Swal.fire({
+                        text: respuesta.message || "Expediente registrado correctamente.",
+                        icon: "success",
+                        buttonsStyling: false,
+                        confirmButtonText: "Entendido",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
+                }
+                cargarBandeja();
                 
             })
             .catch(function (error) {
@@ -1357,13 +1367,23 @@ document.addEventListener("DOMContentLoaded", function () {
          *
          * De esa forma mostramos quién realmente
          * está enviando el documento.
-         */
-
+        // --------------------------------------------------------
+        // DOMINIO ORIGEN (ARQUITECTURA INSTITUCIONAL)
+        // --------------------------------------------------------
+        if (item.dominio_origen) {
+            return {
+                tipo: "Dominio",
+                nombre: item.dominio_origen,
+                equipo: null,
+                area: null,
+                usuario: item.usuario_origen ?? "-",
+                nivel: 1
+            };
+        }
 
         // --------------------------------------------------------
-        // SUB EQUIPO
+        // SUB EQUIPO (LEGACY)
         // --------------------------------------------------------
-
         if (
             item.sub_equipo_origen_id &&
             item.sub_equipo_origen
@@ -1493,9 +1513,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // --------------------------------------------------------
-        // SUB EQUIPO
+        // DOMINIO DESTINO (LA DIRECCIÓN)
         // --------------------------------------------------------
+        if (item.dominio_destino) {
+            return {
+                tipo: "Dirección",
+                nombre: item.dominio_destino,
+                equipo: null,
+                area: null,
+                usuario: item.usuario_destino ?? "-",
+                nivel: 1
+            };
+        }
 
+        // --------------------------------------------------------
+        // SUB EQUIPO (LEGACY)
+        // --------------------------------------------------------
         if (
             item.sub_equipo_destino_id &&
             item.sub_equipo_destino

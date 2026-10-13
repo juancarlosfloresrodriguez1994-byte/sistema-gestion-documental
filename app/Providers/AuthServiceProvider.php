@@ -4,7 +4,7 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +29,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // SuperAdministrador (ID: 2) y Administrador (ID: 1) tienen autorización total en todas las habilidades
+        Gate::before(function ($user, $ability) {
+            if ($user && in_array($user->tipoUsuario_id, [1, 2])) {
+                return true;
+            }
+        });
         View::composer('layouts.menu', function ($view) {
             $menuAll = [];
             $userLogin = Auth::id();
@@ -72,6 +78,16 @@ class AuthServiceProvider extends ServiceProvider
 
     public function getSubmenu($menu)
     {
+        $user = Auth::user();
+        if ($user && in_array($user->tipoUsuario_id, [1, 2])) {
+            $submenu = DB::table('menus')
+                ->where('padre', $menu['id'])
+                ->orderBy('orden')
+                ->get()
+                ->toArray();
+            return ['submenu' => $submenu, 'estado' => count($submenu) > 0];
+        }
+
         $estado = false;
         $submenu = DB::table('privilegios')
             ->join('menus', 'menus.id', '=', 'privilegios.menu_id')
@@ -83,8 +99,6 @@ class AuthServiceProvider extends ServiceProvider
             ->get()
             ->toArray();
 
-        //dd( $submenu);
-
         if (count($submenu) > 0) {
             $estado = true;
         }
@@ -94,6 +108,17 @@ class AuthServiceProvider extends ServiceProvider
 
     public function getMenu($menu)
     {
+        $user = Auth::user();
+        if ($user && in_array($user->tipoUsuario_id, [1, 2])) {
+            $menus = DB::table('menus')
+                ->where('padre', '0')
+                ->where('id', $menu['id'])
+                ->orderBy('orden')
+                ->get()
+                ->toArray();
+            return ['menus' => $menus, 'estado' => count($menus) > 0];
+        }
+
         $estado = false;
         $menus = DB::table('privilegios')
             ->join('menus', 'menus.id', '=', 'privilegios.menu_id')
@@ -105,8 +130,6 @@ class AuthServiceProvider extends ServiceProvider
             ])
             ->get()
             ->toArray();
-
-        //  dd(  $menus);
 
         if (count($menus) > 0) {
             $estado = true;
