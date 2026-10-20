@@ -186,6 +186,7 @@ class DominioUsuarioController extends Controller
                 'd.domi_tipo as tipo',
                 'd.domi_nombre as nombre',
                 'd.domi_idarea_str as area_padre',
+                'd.domi_idequipo_str as equipo_padre',
                 DB::raw("
                     CASE d.domi_tipo
                         WHEN 'AREA' THEN
@@ -193,18 +194,20 @@ class DominioUsuarioController extends Controller
                         WHEN 'EQUIPO' THEN
                             CONCAT('[EQUIPO] ', d.domi_nombre, ' (Área: ', d.domi_idarea_str, ')')
                         WHEN 'SUBEQUIPO' THEN
-                            CONCAT('[SUBEQUIPO] ', d.domi_nombre, ' (Área: ', d.domi_idarea_str, ')')
+                            CONCAT('[SUBEQUIPO] ', d.domi_nombre, ' (Equipo: ', d.domi_idequipo_str, ' > Área: ', d.domi_idarea_str, ')')
                         ELSE d.domi_nombre
                     END AS text
                 ")
             )
             ->where(function ($q) use ($term) {
                 $q->where('d.domi_nombre', 'like', "%{$term}%")
+                    ->orWhere('d.domi_siglas', 'like', "%{$term}%")
+                    ->orWhere('d.domi_idequipo_str', 'like', "%{$term}%")
                     ->orWhere('d.domi_idarea_str', 'like', "%{$term}%");
             })
             ->whereIn('d.domi_tipo', ['AREA', 'EQUIPO', 'SUBEQUIPO'])
             ->orderByRaw("FIELD(d.domi_tipo, 'AREA', 'EQUIPO', 'SUBEQUIPO'), d.domi_nombre")
-            ->limit(20)
+            ->limit(25)
             ->get();
 
         return response()->json($elementos);

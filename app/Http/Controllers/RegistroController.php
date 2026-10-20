@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Usuario;
 use App\Models\RegistroPendiente;
 use App\Models\TipoUsuario;
+use App\Models\Dominio;
 use App\Mail\VerificacionRegistroMail;
 use Illuminate\Support\Facades\DB;
 
@@ -279,23 +280,29 @@ class RegistroController extends Controller
             ]);
         }
 
-        // Buscar tipo de usuario por defecto "NORMAL" o el primer tipo disponible
-        $tipoUsuario = TipoUsuario::where('descripcion', 'LIKE', '%NORMAL%')->first();
+        // Buscar tipo de usuario por defecto "USUARIO VIRTUAL"
+        $tipoUsuario = TipoUsuario::where('descripcion', 'LIKE', '%VIRTUAL%')
+            ->orWhere('descripcion', 'LIKE', '%NORMAL%')
+            ->first();
         if (!$tipoUsuario) {
             $tipoUsuario = TipoUsuario::first();
         }
 
+        // Buscar dominio por defecto "USUARIO VIRTUAL"
+        $dominioVirtual = Dominio::where('domi_nombre', 'LIKE', '%VIRTUAL%')->first();
+
         // Crear el usuario definitivo
         $usuario = Usuario::create([
-            'nombres'         => $registro->nombres,
-            'apellidos'       => $registro->apellidos,
-            'nickname'        => $registro->nickname,
-            'password'        => $registro->password, // ya está hasheada
-            'correo'          => $registro->correo,
-            'tipoUsuario_id'  => $tipoUsuario ? $tipoUsuario->id : null,
-            'estado'          => 1,
-            'dni'             => $registro->dni,
-            'nombre_completo' => $registro->nombre_completo,
+            'nombres'              => $registro->nombres,
+            'apellidos'            => $registro->apellidos,
+            'nickname'             => $registro->nickname,
+            'password'             => $registro->password, // ya está hasheada
+            'correo'               => $registro->correo,
+            'tipoUsuario_id'       => $tipoUsuario ? $tipoUsuario->id : null,
+            'dominio_id'           => $dominioVirtual ? $dominioVirtual->id : null,
+            'estado'               => 1,
+            'dni'                  => $registro->dni,
+            'nombre_completo'      => $registro->nombre_completo,
             'correo_verificado_at' => now(),
         ]);
 

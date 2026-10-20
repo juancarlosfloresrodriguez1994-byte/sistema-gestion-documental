@@ -37,48 +37,34 @@ class DominioController extends Controller
 
     public function autocompletadoDominio(Request $request)
     {
-
         $term = trim($request->term ?? '');
 
         $elementos = DB::table('dominio as d')
             ->select(
-                'd.id  as id',
-
+                'd.id as id',
                 DB::raw("
-                CASE d.domi_tipo
-                    WHEN 'AREA' THEN
-                        CONCAT('A: ', d.domi_nombre)
-
-                    WHEN 'EQUIPO' THEN
-                        CONCAT(
-                            'E: ',
-                            d.domi_idarea_str,
-                            ' > ',
-                            d.domi_nombre
-                        )
-
-                    WHEN 'SUBEQUIPO' THEN
-                        CONCAT(
-                            'SE: ',
-                            d.domi_idarea_str,
-                            ' > ',
-                            d.domi_idequipo,
-                            ' > ',
-                            d.domi_nombre
-                        )
-                END AS text
-            "),
-
+                    CASE d.domi_tipo
+                        WHEN 'AREA' THEN
+                            CONCAT('[ÁREA] ', d.domi_nombre)
+                        WHEN 'EQUIPO' THEN
+                            CONCAT('[EQUIPO] ', d.domi_nombre, ' (Área: ', d.domi_idarea_str, ')')
+                        WHEN 'SUBEQUIPO' THEN
+                            CONCAT('[SUBEQUIPO] ', d.domi_nombre, ' (Equipo: ', d.domi_idequipo_str, ' > Área: ', d.domi_idarea_str, ')')
+                        ELSE d.domi_nombre
+                    END AS text
+                "),
                 'd.domi_nombre as destino',
-                'd.domi_Tipo as tipo'
+                'd.domi_tipo as tipo'
             )
-            ->where('d.domi_nombre', 'like', "%{$term}%")
-            ->whereIn('d.domi_tipo', [
-                'AREA',
-                'EQUIPO',
-                'SUBEQUIPO'
-            ])
-            ->limit(10)
+            ->where(function ($q) use ($term) {
+                $q->where('d.domi_nombre', 'like', "%{$term}%")
+                    ->orWhere('d.domi_siglas', 'like', "%{$term}%")
+                    ->orWhere('d.domi_idequipo_str', 'like', "%{$term}%")
+                    ->orWhere('d.domi_idarea_str', 'like', "%{$term}%");
+            })
+            ->whereIn('d.domi_tipo', ['AREA', 'EQUIPO', 'SUBEQUIPO'])
+            ->orderByRaw("FIELD(d.domi_tipo, 'AREA', 'EQUIPO', 'SUBEQUIPO'), d.domi_nombre")
+            ->limit(25)
             ->get();
 
         return response()->json($elementos);
