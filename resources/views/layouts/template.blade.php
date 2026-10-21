@@ -98,6 +98,7 @@
     </script>
 
     @yield('scripts')
+    @stack('scripts')
 
     @vite('resources/js/main.js')
 </body>

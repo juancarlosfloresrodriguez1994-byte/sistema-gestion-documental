@@ -90,3 +90,12 @@ Route::post('dominio-usuario/asignar', [DominioUsuarioController::class, 'asigna
 Route::delete('dominio-usuario/desvincular/{id}', [DominioUsuarioController::class, 'desvincular'])->name('dominio-usuario.desvincular');
 Route::get('dominio-usuario/filtro', [DominioUsuarioController::class, 'filtroDominio'])->name('dominio-usuario.filtro');
 
+// ─── Módulo Dominio (Organigrama Institucional) ───
+Route::get('dominio', [DominioController::class, 'index'])->name('dominio.index');
+Route::get('apiDominios', [DominioController::class, 'apiDominios'])->name('dominio.api');
+Route::get('dominio/opciones-padre', [DominioController::class, 'opcionesPadre'])->name('dominio.opciones-padre');
+Route::post('dominio', [DominioController::class, 'store'])->name('dominio.store');
+Route::get('dominio/{id}', [DominioController::class, 'show'])->name('dominio.show');
+Route::put('dominio/{id}', [DominioController::class, 'update'])->name('dominio.update');
+Route::delete('dominio/{id}', [DominioController::class, 'destroy'])->name('dominio.destroy');
+
