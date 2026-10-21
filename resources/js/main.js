@@ -574,14 +574,7 @@ tipo_tramiteRadio.forEach((radio) => {
             // Mostrar Procedimiento
             procedimiento.classList.remove("hidden");
 
-            // Limpiar Área
-            $(".arefiltro").val(null).trigger("change");
-
-            // Limpiar Equipo
-            $(".filtroEquipo").val(null).trigger("change");
-
-            // Limpiar Sub equipo
-            $(".filtrosubEquipo").val(null).trigger("change");
+           
         }
     });
 });

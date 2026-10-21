@@ -121,7 +121,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="fv-row mb-9">
+                    <div class="fv-row mb-9 destino_input">
                         <label class="fs-6 fw-semibold mb-2">
                             Destino Institucional
                         </label>
